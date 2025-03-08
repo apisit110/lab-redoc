@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# next 15 with redoc
 
-## Getting Started
 
-First, run the development server:
+to initital project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+follow there docs:
+
+- https://redocly.com/docs/redoc/deployment/react
+- https://nextjs.org/docs/app/getting-started/installation
+- https://nextjs.org/docs/pages/building-your-application/deploying/static-exports
+
+add yaml.d.ts to ignore typescript
+
+add config to next.config.ts
+
+```typescript
+const nextConfig: NextConfig = {
+  /* config options here */
+  output: 'export',
+  trailingSlash: true,
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.ya?ml$/,
+      use: 'yaml-loader'
+    })
+    return config
+  }
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+add `output` cause we will export to static sie when execute next build will got directory out we can directly upload out directory to static host
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+add `trailingSlash` cause end with slash when visit our static site url
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+add `webpack` to use import file type yaml in component need to install package `yaml-loader` in dev dependencies
 
-## Learn More
+to create new spec page
 
-To learn more about Next.js, take a look at the following resources:
+- create a new file page.tsx in page router directory which you want
+- write a file yaml spec format openapi in directory src/specs
+- import file spec to page router
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+to run this app, use node version in .nvmrc then install and run with following command
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+nvm use
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+to export to static file
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+nextjs will generate directory out, we can use this directory to static host
+
+> you can use vscode extention name Live Server to test your static site
+> open folder out in your vscode and run this Live Server
